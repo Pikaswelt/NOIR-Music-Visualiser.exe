@@ -2,6 +2,7 @@ import "./style.css";
 
 const canvas = document.querySelector("#visualiser");
 const ctx = canvas.getContext("2d");
+const languageSelect = document.querySelector("#languageSelect");
 const setupScreen = document.querySelector("#setupScreen");
 const liveScreen = document.querySelector("#liveScreen");
 const controlPanel = document.querySelector("#controlPanel");
@@ -46,19 +47,6 @@ const palettes = {
   mono: ["#ffffff", "#8b8b8b", "#303030"],
 };
 
-const modeLabels = {
-  aura: "Aura",
-  bars: "Monolith",
-  rings: "Ringe",
-  wave: "Welle",
-  spectrum: "Spektrum",
-  tunnel: "Neon Tunnel",
-  kaleidoscope: "Kaleidoskop",
-  terrain: "Frequency Terrain",
-  constellation: "Konstellation",
-  vortex: "Partikel-Vortex",
-};
-
 const paletteLabels = {
   ice: "Ice White",
   violet: "Ultraviolet",
@@ -67,6 +55,77 @@ const paletteLabels = {
   acid: "Acid Pulse",
   mono: "Pure Mono",
 };
+
+const translations = {
+  en: {
+    language: "Language", home: "NOIR home", heroLine: "Make music", heroAccent: "visible.",
+    heroCopy: "Choose your source, shape the look, and let sound take over the room.",
+    session: "Your session", ready: "Ready", audioSource: "Audio source",
+    systemAudio: "System audio", systemAudioHint: "Current Windows PC audio",
+    microphone: "Microphone", microphoneHint: "Live input from the room",
+    audioFile: "Audio file", chooseFile: "Choose a file", browse: "Browse",
+    palette: "Palette", quickPresets: "Quick presets", intensity: "Intensity",
+    advancedHint: "Shape, motion, and audio response", symmetry: "Symmetry",
+    normal: "Normal", fold2: "2-fold", fold4: "4-fold", fold6: "6-fold", fold8: "8-fold",
+    reactivity: "Reactivity", motion: "Motion", detail: "Detail",
+    start: "Start visualisation", connecting: "Connecting audio...",
+    privacy: "Audio stays on this computer and is never uploaded.",
+    back: "Back to setup", fullscreen: "Fullscreen", nextScene: "Next scene",
+    modeRings: "Rings", modeWave: "Wave", modeSpectrum: "Spectrum",
+    modeKaleidoscope: "Kaleidoscope", modeConstellation: "Constellation",
+    modeVortex: "Particle Vortex", sourceSystem: "SYSTEM AUDIO",
+    sourceMicrophone: "MICROPHONE", sourceFile: "AUDIO FILE", liveInput: "LIVE INPUT",
+    noFile: "Choose an audio file first.",
+    noSystemAudio: "Windows did not provide system audio. Start playing music and try again.",
+    audioBlocked: "Windows blocked access to system audio.",
+    audioBusy: "Another app is using the audio device in exclusive mode.",
+    audioUnknown: "System audio could not be connected",
+  },
+  de: {
+    language: "Sprache", home: "NOIR Startseite", heroLine: "Mach Musik", heroAccent: "sichtbar.",
+    heroCopy: "Wähle deine Quelle, forme den Look und lass den Sound den Raum übernehmen.",
+    session: "Deine Session", ready: "Bereit", audioSource: "Audioquelle",
+    systemAudio: "Systemaudio", systemAudioHint: "Aktueller Windows-PC-Ton",
+    microphone: "Mikrofon", microphoneHint: "Live aus dem Raum",
+    audioFile: "Audiodatei", chooseFile: "Datei auswählen", browse: "Durchsuchen",
+    palette: "Farbwelt", quickPresets: "Schnell-Presets", intensity: "Intensität",
+    advancedHint: "Form, Bewegung und Audio-Reaktion", symmetry: "Symmetrie",
+    normal: "Normal", fold2: "2-fach", fold4: "4-fach", fold6: "6-fach", fold8: "8-fach",
+    reactivity: "Reaktivität", motion: "Bewegung", detail: "Detail",
+    start: "Visualisierung starten", connecting: "Audio wird verbunden...",
+    privacy: "Audio bleibt lokal auf diesem Computer und wird nicht hochgeladen.",
+    back: "Zurück zum Setup", fullscreen: "Vollbild", nextScene: "Nächste Szene",
+    modeRings: "Ringe", modeWave: "Welle", modeSpectrum: "Spektrum",
+    modeKaleidoscope: "Kaleidoskop", modeConstellation: "Konstellation",
+    modeVortex: "Partikel-Vortex", sourceSystem: "SYSTEMAUDIO",
+    sourceMicrophone: "MIKROFON", sourceFile: "AUDIODATEI", liveInput: "LIVE INPUT",
+    noFile: "Bitte wähle zuerst eine Audiodatei aus.",
+    noSystemAudio: "Windows hat keinen Systemton bereitgestellt. Starte Musik und versuche es erneut.",
+    audioBlocked: "Der Zugriff auf den PC-Ton wurde von Windows blockiert.",
+    audioBusy: "Der PC-Ton wird bereits von einer anderen App exklusiv verwendet.",
+    audioUnknown: "PC-Ton konnte nicht verbunden werden",
+  },
+};
+
+const modeLabelKeys = {
+  rings: "modeRings",
+  wave: "modeWave",
+  spectrum: "modeSpectrum",
+  kaleidoscope: "modeKaleidoscope",
+  constellation: "modeConstellation",
+  vortex: "modeVortex",
+};
+
+let currentLanguage = "en";
+
+function t(key) {
+  return translations[currentLanguage][key] ?? translations.en[key] ?? key;
+}
+
+function modeLabel(mode) {
+  const key = modeLabelKeys[mode];
+  return key ? t(key) : document.querySelector(`#visualMode option[value="${mode}"]`)?.textContent ?? mode;
+}
 
 const presets = {
   clean: {
@@ -132,7 +191,42 @@ function updateAdvancedRanges() {
 }
 
 function updateModeName() {
-  modeName.textContent = `${modeLabels[visualMode.value]} / ${paletteLabels[palette.value]}`.toUpperCase();
+  modeName.textContent = `${modeLabel(visualMode.value)} / ${paletteLabels[palette.value]}`.toUpperCase();
+}
+
+function updateLiveSourceLabels() {
+  const type = selectedSource();
+  if (type === "system") {
+    sourceName.textContent = t("sourceSystem");
+    trackName.textContent = t("sourceSystem");
+  } else if (type === "microphone") {
+    sourceName.textContent = t("sourceMicrophone");
+    trackName.textContent = t("liveInput");
+  } else if (type === "file") {
+    sourceName.textContent = t("sourceFile");
+    if (!selectedFile) trackName.textContent = t("sourceFile");
+  }
+}
+
+function applyLanguage(language) {
+  currentLanguage = translations[language] ? language : "en";
+  document.documentElement.lang = currentLanguage;
+  languageSelect.value = currentLanguage;
+
+  document.querySelectorAll("[data-i18n]").forEach((element) => {
+    element.textContent = t(element.dataset.i18n);
+  });
+  document.querySelectorAll("[data-i18n-aria]").forEach((element) => {
+    element.setAttribute("aria-label", t(element.dataset.i18nAria));
+  });
+  document.querySelectorAll("[data-i18n-title]").forEach((element) => {
+    element.title = t(element.dataset.i18nTitle);
+  });
+
+  if (!selectedFile) fileName.textContent = t("chooseFile");
+  if (!startButton.disabled) startButton.querySelector("span").textContent = t("start");
+  updateModeName();
+  updateLiveSourceLabels();
 }
 
 function applyPreset(name) {
@@ -165,8 +259,8 @@ function updateSourceUI() {
 function setLoading(loading) {
   startButton.disabled = loading;
   startButton.querySelector("span").textContent = loading
-    ? "Audio wird verbunden..."
-    : "Visualisierung starten";
+    ? t("connecting")
+    : t("start");
 }
 
 function setError(message) {
@@ -203,8 +297,8 @@ async function connectSource(type) {
     mediaStream.getVideoTracks().forEach((track) => track.stop());
     sourceNode = audioContext.createMediaStreamSource(mediaStream);
     sourceNode.connect(analyser);
-    sourceName.textContent = "SYSTEMAUDIO";
-    trackName.textContent = "SYSTEM AUDIO";
+    sourceName.textContent = t("sourceSystem");
+    trackName.textContent = t("sourceSystem");
   }
 
   if (type === "microphone") {
@@ -217,8 +311,8 @@ async function connectSource(type) {
     });
     sourceNode = audioContext.createMediaStreamSource(mediaStream);
     sourceNode.connect(analyser);
-    sourceName.textContent = "MIKROFON";
-    trackName.textContent = "LIVE INPUT";
+    sourceName.textContent = t("sourceMicrophone");
+    trackName.textContent = t("liveInput");
   }
 
   if (type === "file") {
@@ -230,7 +324,7 @@ async function connectSource(type) {
     sourceNode = audioContext.createMediaElementSource(audioPlayer);
     sourceNode.connect(analyser);
     analyser.connect(audioContext.destination);
-    sourceName.textContent = "AUDIODATEI";
+    sourceName.textContent = t("sourceFile");
     trackName.textContent = selectedFile.name.replace(/\.[^/.]+$/, "").toUpperCase();
     await audioPlayer.play();
   }
@@ -699,7 +793,7 @@ async function startVisualisation(event) {
   const sourceType = selectedSource();
 
   if (sourceType === "file" && !selectedFile) {
-    setError("Bitte wähle zuerst eine Audiodatei aus.");
+    setError(t("noFile"));
     return;
   }
 
@@ -718,16 +812,16 @@ async function startVisualisation(event) {
   } catch (error) {
     cleanupAudio();
     if (error.message === "NO_FILE") {
-      setError("Bitte wähle zuerst eine Audiodatei aus.");
+      setError(t("noFile"));
     } else if (error.message === "NO_SYSTEM_AUDIO") {
-      setError("Windows hat keinen Systemton bereitgestellt. Starte Musik und versuche es erneut.");
+      setError(t("noSystemAudio"));
     } else if (error.name === "NotAllowedError") {
-      setError("Der Zugriff auf den PC-Ton wurde von Windows blockiert.");
+      setError(t("audioBlocked"));
     } else if (error.name === "NotReadableError") {
-      setError("Der PC-Ton wird bereits von einer anderen App exklusiv verwendet.");
+      setError(t("audioBusy"));
     } else {
       console.error(error);
-      setError(`PC-Ton konnte nicht verbunden werden (${error.name || "unbekannter Fehler"}).`);
+      setError(`${t("audioUnknown")} (${error.name || "unknown error"}).`);
     }
   }
 }
@@ -803,8 +897,9 @@ controlPanel.addEventListener("change", (event) => {
 filePicker.addEventListener("click", () => audioFile.click());
 audioFile.addEventListener("change", () => {
   selectedFile = audioFile.files[0];
-  fileName.textContent = selectedFile?.name ?? "Datei auswählen";
+  fileName.textContent = selectedFile?.name ?? t("chooseFile");
 });
+languageSelect.addEventListener("change", () => applyLanguage(languageSelect.value));
 intensity.addEventListener("input", updateRange);
 reactivity.addEventListener("input", updateAdvancedRanges);
 motion.addEventListener("input", updateAdvancedRanges);
@@ -825,6 +920,7 @@ window.addEventListener("resize", resizeCanvas);
 window.addEventListener("beforeunload", cleanupAudio);
 
 resizeCanvas();
+applyLanguage("en");
 updateRange();
 updateAdvancedRanges();
 updateModeName();

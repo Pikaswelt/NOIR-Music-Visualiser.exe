@@ -23,6 +23,7 @@ currently playing on the PC and turns it into responsive real-time graphics.
 - Advanced controls for reactivity, motion, trails, detail, symmetry, blending,
   bloom, beat pulse, mirroring, and automatic scene changes
 - Fullscreen mode and a short NOIR startup animation
+- English and German interface
 - Local processing: audio is not uploaded
 
 ## Download
@@ -53,3 +54,5 @@ npm run build:exe
 ## License
 
 MIT
+
+<sub>Built with the assistance of AI tools.</sub>

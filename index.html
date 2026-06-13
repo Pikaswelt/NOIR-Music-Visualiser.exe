@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#050505" />
     <meta
       name="description"
-      content="Ein minimalistischer Live-Musikvisualisierer für Systemaudio, Mikrofon und Audiodateien."
+      content="A dark live music visualiser for system audio, microphone, and audio files."
     />
     <title>NOIR — Music Visualiser</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -32,19 +32,28 @@
     <main class="app-shell">
       <section class="setup-screen" id="setupScreen">
         <header class="topbar">
-          <a class="brand" href="#" aria-label="NOIR Startseite">
+          <a class="brand" href="#" aria-label="NOIR home" data-i18n-aria="home">
             <span class="brand-mark"></span>
             <span>NOIR</span>
           </a>
-          <span class="topbar-note">LIVE AUDIO / VISUAL SYSTEM</span>
+          <div class="topbar-actions">
+            <span class="topbar-note">LIVE AUDIO / VISUAL SYSTEM</span>
+            <label class="language-control">
+              <span data-i18n="language">Language</span>
+              <select id="languageSelect" aria-label="Language">
+                <option value="en">EN</option>
+                <option value="de">DE</option>
+              </select>
+            </label>
+          </div>
         </header>
 
         <div class="setup-wrap">
           <div class="intro">
             <p class="eyebrow">AUDIO REACTIVE EXPERIENCE</p>
-            <h1>Mach Musik<br /><em>sichtbar.</em></h1>
-            <p class="intro-copy">
-              Wähle deine Quelle, forme den Look und lass den Sound den Raum übernehmen.
+            <h1><span data-i18n="heroLine">Make music</span><br /><em data-i18n="heroAccent">visible.</em></h1>
+            <p class="intro-copy" data-i18n="heroCopy">
+              Choose your source, shape the look, and let sound take over the room.
             </p>
           </div>
 
@@ -52,13 +61,13 @@
             <div class="panel-header">
               <div>
                 <p class="step-label">01 / SETUP</p>
-                <h2>Deine Session</h2>
+                <h2 data-i18n="session">Your session</h2>
               </div>
-              <span class="status-dot" title="Bereit"></span>
+              <span class="status-dot" title="Ready" data-i18n-title="ready"></span>
             </div>
 
             <fieldset class="control-group">
-              <legend>Audioquelle</legend>
+              <legend data-i18n="audioSource">Audio source</legend>
               <div class="source-grid">
                 <label class="source-option">
                   <input type="radio" name="source" value="system" checked />
@@ -70,8 +79,8 @@
                       </svg>
                     </span>
                     <span>
-                      <strong>Systemaudio</strong>
-                      <small>Aktueller Windows-PC-Ton</small>
+                      <strong data-i18n="systemAudio">System audio</strong>
+                      <small data-i18n="systemAudioHint">Current Windows PC audio</small>
                     </span>
                     <span class="source-check"></span>
                   </span>
@@ -87,8 +96,8 @@
                       </svg>
                     </span>
                     <span>
-                      <strong>Mikrofon</strong>
-                      <small>Live aus dem Raum</small>
+                      <strong data-i18n="microphone">Microphone</strong>
+                      <small data-i18n="microphoneHint">Live input from the room</small>
                     </span>
                     <span class="source-check"></span>
                   </span>
@@ -105,7 +114,7 @@
                       </svg>
                     </span>
                     <span>
-                      <strong>Audiodatei</strong>
+                      <strong data-i18n="audioFile">Audio file</strong>
                       <small>MP3, WAV oder OGG</small>
                     </span>
                     <span class="source-check"></span>
@@ -114,8 +123,8 @@
               </div>
               <input id="audioFile" type="file" accept="audio/*" hidden />
               <button class="file-picker" id="filePicker" type="button" hidden>
-                <span id="fileName">Datei auswählen</span>
-                <span>Durchsuchen</span>
+                <span id="fileName" data-i18n="chooseFile">Choose a file</span>
+                <span data-i18n="browse">Browse</span>
               </button>
             </fieldset>
 
@@ -125,19 +134,19 @@
                 <select id="visualMode">
                   <option value="aura">Aura</option>
                   <option value="bars">Monolith</option>
-                  <option value="rings">Ringe</option>
-                  <option value="wave">Welle</option>
-                  <option value="spectrum">Spektrum</option>
+                  <option value="rings" data-i18n="modeRings">Rings</option>
+                  <option value="wave" data-i18n="modeWave">Wave</option>
+                  <option value="spectrum" data-i18n="modeSpectrum">Spectrum</option>
                   <option value="tunnel">Neon Tunnel</option>
-                  <option value="kaleidoscope">Kaleidoskop</option>
+                  <option value="kaleidoscope" data-i18n="modeKaleidoscope">Kaleidoscope</option>
                   <option value="terrain">Frequency Terrain</option>
-                  <option value="constellation">Konstellation</option>
-                  <option value="vortex">Partikel-Vortex</option>
+                  <option value="constellation" data-i18n="modeConstellation">Constellation</option>
+                  <option value="vortex" data-i18n="modeVortex">Particle Vortex</option>
                 </select>
               </label>
 
               <label class="select-control">
-                <span>Farbwelt</span>
+                <span data-i18n="palette">Palette</span>
                 <select id="palette">
                   <option value="ice">Ice White</option>
                   <option value="violet">Ultraviolet</option>
@@ -149,7 +158,7 @@
               </label>
             </div>
 
-            <div class="quick-presets" aria-label="Schnell-Presets">
+            <div class="quick-presets" aria-label="Quick presets" data-i18n-aria="quickPresets">
               <button type="button" class="preset-button is-active" data-preset="clean">Clean</button>
               <button type="button" class="preset-button" data-preset="cinema">Cinema</button>
               <button type="button" class="preset-button" data-preset="club">Club</button>
@@ -158,7 +167,7 @@
 
             <div class="range-control primary-range">
               <div class="range-head">
-                <label for="intensity">Intensität</label>
+                <label for="intensity" data-i18n="intensity">Intensity</label>
                 <output id="intensityValue">72%</output>
               </div>
               <input id="intensity" type="range" min="20" max="100" value="72" />
@@ -168,7 +177,7 @@
               <summary>
                 <span>
                   <strong>Advanced Effects</strong>
-                  <small>Form, Bewegung und Audio-Reaktion</small>
+                  <small data-i18n="advancedHint">Shape, motion, and audio response</small>
                 </span>
                 <span class="summary-plus"></span>
               </summary>
@@ -176,13 +185,13 @@
               <div class="advanced-content">
                 <div class="advanced-grid">
                   <label class="select-control">
-                    <span>Symmetrie</span>
+                    <span data-i18n="symmetry">Symmetry</span>
                     <select id="symmetry">
-                      <option value="1">Normal</option>
-                      <option value="2">2-fach</option>
-                      <option value="4">4-fach</option>
-                      <option value="6">6-fach</option>
-                      <option value="8">8-fach</option>
+                      <option value="1" data-i18n="normal">Normal</option>
+                      <option value="2" data-i18n="fold2">2-fold</option>
+                      <option value="4" data-i18n="fold4">4-fold</option>
+                      <option value="6" data-i18n="fold6">6-fold</option>
+                      <option value="8" data-i18n="fold8">8-fold</option>
                     </select>
                   </label>
 
@@ -199,11 +208,11 @@
 
                 <div class="compact-ranges">
                   <label class="mini-range">
-                    <span><b>Reaktivität</b><output id="reactivityValue">70</output></span>
+                    <span><b data-i18n="reactivity">Reactivity</b><output id="reactivityValue">70</output></span>
                     <input id="reactivity" type="range" min="20" max="100" value="70" />
                   </label>
                   <label class="mini-range">
-                    <span><b>Bewegung</b><output id="motionValue">45</output></span>
+                    <span><b data-i18n="motion">Motion</b><output id="motionValue">45</output></span>
                     <input id="motion" type="range" min="0" max="100" value="45" />
                   </label>
                   <label class="mini-range">
@@ -211,7 +220,7 @@
                     <input id="trail" type="range" min="0" max="95" value="55" />
                   </label>
                   <label class="mini-range">
-                    <span><b>Detail</b><output id="detailValue">65</output></span>
+                    <span><b data-i18n="detail">Detail</b><output id="detailValue">65</output></span>
                     <input id="detail" type="range" min="20" max="100" value="65" />
                   </label>
                 </div>
@@ -242,7 +251,7 @@
             </details>
 
             <button class="start-button" type="submit">
-              <span>Visualisierung starten</span>
+              <span data-i18n="start">Start visualisation</span>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M5 12h14M14 7l5 5-5 5"></path>
               </svg>
@@ -255,7 +264,7 @@
                   <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
                 </svg>
               </span>
-              Audio bleibt lokal in deinem Browser und wird nicht hochgeladen.
+              <span data-i18n="privacy">Audio stays on this computer and is never uploaded.</span>
             </p>
 
             <p class="error-message" id="errorMessage" role="alert"></p>
@@ -289,7 +298,7 @@
         </div>
 
         <div class="live-controls">
-          <button class="icon-button" id="backButton" type="button" aria-label="Zurück zum Setup">
+          <button class="icon-button" id="backButton" type="button" aria-label="Back to setup" data-i18n-aria="back">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M19 12H5M10 17l-5-5 5-5"></path>
             </svg>
@@ -298,12 +307,12 @@
             <span class="pause-icon"></span>
             <span id="pauseText">PAUSE</span>
           </button>
-          <button class="icon-button" id="fullscreenButton" type="button" aria-label="Vollbild">
+          <button class="icon-button" id="fullscreenButton" type="button" aria-label="Fullscreen" data-i18n-aria="fullscreen">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"></path>
             </svg>
           </button>
-          <button class="icon-button" id="shuffleButton" type="button" aria-label="Nächste Szene">
+          <button class="icon-button" id="shuffleButton" type="button" aria-label="Next scene" data-i18n-aria="nextScene">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M16 3h5v5M4 20l6-6M21 3l-7 7M16 16l5 5M21 16v5h-5M4 4l5 5"></path>
             </svg>

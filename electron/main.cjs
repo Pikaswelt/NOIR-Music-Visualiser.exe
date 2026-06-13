@@ -10,6 +10,7 @@ function createWindow() {
     minWidth: 900,
     minHeight: 620,
     backgroundColor: "#000000",
+    icon: path.join(__dirname, "..", "build", "icon.png"),
     autoHideMenuBar: true,
     show: false,
     webPreferences: {

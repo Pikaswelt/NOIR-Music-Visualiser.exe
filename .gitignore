@@ -1,5 +1,6 @@
 node_modules/
 dist/
 release/
+build/icon-sizes/
 .vite.*.log
 .DS_Store
