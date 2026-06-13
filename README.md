@@ -3,6 +3,7 @@
 NOIR is a dark, fullscreen music visualiser for Windows. It captures the audio
 currently playing on the PC and turns it into responsive real-time graphics.
 
+ Virustotal: https://www.virustotal.com/gui/file-analysis/Y2Y3ZWY2NjYzOGMwODBjMWQ3N2QyYTI1ZGJlYTk2YTc6MTc4MTM4MTQ2NA==
 ## Features
 
 - Direct Windows system-audio capture
