@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050505" />
+    <meta
+      name="description"
+      content="Ein minimalistischer Live-Musikvisualisierer für Systemaudio, Mikrofon und Audiodateien."
+    />
+    <title>NOIR — Music Visualiser</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="intro-sequence" id="introSequence" aria-hidden="true">
+      <div class="intro-orbit"></div>
+      <div class="intro-logo">
+        <span class="intro-mark"></span>
+        <strong>NOIR</strong>
+        <small>AUDIO / REACTIVE / SYSTEM</small>
+      </div>
+      <div class="intro-scan"></div>
+    </div>
+
+    <canvas id="visualiser" aria-hidden="true"></canvas>
+
+    <main class="app-shell">
+      <section class="setup-screen" id="setupScreen">
+        <header class="topbar">
+          <a class="brand" href="#" aria-label="NOIR Startseite">
+            <span class="brand-mark"></span>
+            <span>NOIR</span>
+          </a>
+          <span class="topbar-note">LIVE AUDIO / VISUAL SYSTEM</span>
+        </header>
+
+        <div class="setup-wrap">
+          <div class="intro">
+            <p class="eyebrow">AUDIO REACTIVE EXPERIENCE</p>
+            <h1>Mach Musik<br /><em>sichtbar.</em></h1>
+            <p class="intro-copy">
+              Wähle deine Quelle, forme den Look und lass den Sound den Raum übernehmen.
+            </p>
+          </div>
+
+          <form class="control-panel" id="controlPanel">
+            <div class="panel-header">
+              <div>
+                <p class="step-label">01 / SETUP</p>
+                <h2>Deine Session</h2>
+              </div>
+              <span class="status-dot" title="Bereit"></span>
+            </div>
+
+            <fieldset class="control-group">
+              <legend>Audioquelle</legend>
+              <div class="source-grid">
+                <label class="source-option">
+                  <input type="radio" name="source" value="system" checked />
+                  <span class="source-card">
+                    <span class="source-icon">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="3" y="4" width="18" height="13" rx="2"></rect>
+                        <path d="M8 21h8M12 17v4"></path>
+                      </svg>
+                    </span>
+                    <span>
+                      <strong>Systemaudio</strong>
+                      <small>Aktueller Windows-PC-Ton</small>
+                    </span>
+                    <span class="source-check"></span>
+                  </span>
+                </label>
+
+                <label class="source-option">
+                  <input type="radio" name="source" value="microphone" />
+                  <span class="source-card">
+                    <span class="source-icon">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="9" y="3" width="6" height="11" rx="3"></rect>
+                        <path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"></path>
+                      </svg>
+                    </span>
+                    <span>
+                      <strong>Mikrofon</strong>
+                      <small>Live aus dem Raum</small>
+                    </span>
+                    <span class="source-check"></span>
+                  </span>
+                </label>
+
+                <label class="source-option">
+                  <input type="radio" name="source" value="file" />
+                  <span class="source-card">
+                    <span class="source-icon">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M9 18V5l11-2v13"></path>
+                        <circle cx="6" cy="18" r="3"></circle>
+                        <circle cx="17" cy="16" r="3"></circle>
+                      </svg>
+                    </span>
+                    <span>
+                      <strong>Audiodatei</strong>
+                      <small>MP3, WAV oder OGG</small>
+                    </span>
+                    <span class="source-check"></span>
+                  </span>
+                </label>
+              </div>
+              <input id="audioFile" type="file" accept="audio/*" hidden />
+              <button class="file-picker" id="filePicker" type="button" hidden>
+                <span id="fileName">Datei auswählen</span>
+                <span>Durchsuchen</span>
+              </button>
+            </fieldset>
+
+            <div class="settings-row">
+              <label class="select-control">
+                <span>Visual</span>
+                <select id="visualMode">
+                  <option value="aura">Aura</option>
+                  <option value="bars">Monolith</option>
+                  <option value="rings">Ringe</option>
+                  <option value="wave">Welle</option>
+                  <option value="spectrum">Spektrum</option>
+                  <option value="tunnel">Neon Tunnel</option>
+                  <option value="kaleidoscope">Kaleidoskop</option>
+                  <option value="terrain">Frequency Terrain</option>
+                  <option value="constellation">Konstellation</option>
+                  <option value="vortex">Partikel-Vortex</option>
+                </select>
+              </label>
+
+              <label class="select-control">
+                <span>Farbwelt</span>
+                <select id="palette">
+                  <option value="ice">Ice White</option>
+                  <option value="violet">Ultraviolet</option>
+                  <option value="ember">Solar Ember</option>
+                  <option value="ocean">Deep Ocean</option>
+                  <option value="acid">Acid Pulse</option>
+                  <option value="mono">Pure Mono</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="quick-presets" aria-label="Schnell-Presets">
+              <button type="button" class="preset-button is-active" data-preset="clean">Clean</button>
+              <button type="button" class="preset-button" data-preset="cinema">Cinema</button>
+              <button type="button" class="preset-button" data-preset="club">Club</button>
+              <button type="button" class="preset-button" data-preset="dream">Dream</button>
+            </div>
+
+            <div class="range-control primary-range">
+              <div class="range-head">
+                <label for="intensity">Intensität</label>
+                <output id="intensityValue">72%</output>
+              </div>
+              <input id="intensity" type="range" min="20" max="100" value="72" />
+            </div>
+
+            <details class="advanced-panel" id="advancedPanel">
+              <summary>
+                <span>
+                  <strong>Advanced Effects</strong>
+                  <small>Form, Bewegung und Audio-Reaktion</small>
+                </span>
+                <span class="summary-plus"></span>
+              </summary>
+
+              <div class="advanced-content">
+                <div class="advanced-grid">
+                  <label class="select-control">
+                    <span>Symmetrie</span>
+                    <select id="symmetry">
+                      <option value="1">Normal</option>
+                      <option value="2">2-fach</option>
+                      <option value="4">4-fach</option>
+                      <option value="6">6-fach</option>
+                      <option value="8">8-fach</option>
+                    </select>
+                  </label>
+
+                  <label class="select-control">
+                    <span>Blend Mode</span>
+                    <select id="blendMode">
+                      <option value="lighter">Glow</option>
+                      <option value="screen">Screen</option>
+                      <option value="source-over">Solid</option>
+                      <option value="difference">Difference</option>
+                    </select>
+                  </label>
+                </div>
+
+                <div class="compact-ranges">
+                  <label class="mini-range">
+                    <span><b>Reaktivität</b><output id="reactivityValue">70</output></span>
+                    <input id="reactivity" type="range" min="20" max="100" value="70" />
+                  </label>
+                  <label class="mini-range">
+                    <span><b>Bewegung</b><output id="motionValue">45</output></span>
+                    <input id="motion" type="range" min="0" max="100" value="45" />
+                  </label>
+                  <label class="mini-range">
+                    <span><b>Trails</b><output id="trailValue">55</output></span>
+                    <input id="trail" type="range" min="0" max="95" value="55" />
+                  </label>
+                  <label class="mini-range">
+                    <span><b>Detail</b><output id="detailValue">65</output></span>
+                    <input id="detail" type="range" min="20" max="100" value="65" />
+                  </label>
+                </div>
+
+                <div class="toggle-grid">
+                  <label class="toggle-control">
+                    <input id="bloom" type="checkbox" checked />
+                    <span></span>
+                    <b>Bloom Glow</b>
+                  </label>
+                  <label class="toggle-control">
+                    <input id="autoCycle" type="checkbox" />
+                    <span></span>
+                    <b>Auto Scene</b>
+                  </label>
+                  <label class="toggle-control">
+                    <input id="beatPulse" type="checkbox" checked />
+                    <span></span>
+                    <b>Beat Pulse</b>
+                  </label>
+                  <label class="toggle-control">
+                    <input id="mirror" type="checkbox" />
+                    <span></span>
+                    <b>Mirror</b>
+                  </label>
+                </div>
+              </div>
+            </details>
+
+            <button class="start-button" type="submit">
+              <span>Visualisierung starten</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 12h14M14 7l5 5-5 5"></path>
+              </svg>
+            </button>
+
+            <p class="privacy-note">
+              <span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="5" y="10" width="14" height="10" rx="2"></rect>
+                  <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+                </svg>
+              </span>
+              Audio bleibt lokal in deinem Browser und wird nicht hochgeladen.
+            </p>
+
+            <p class="error-message" id="errorMessage" role="alert"></p>
+          </form>
+        </div>
+
+        <footer class="setup-footer">
+          <span>NOIR VISUAL SYSTEM</span>
+          <span class="footer-line"></span>
+          <span>© 2026</span>
+        </footer>
+      </section>
+
+      <section class="live-screen" id="liveScreen" aria-hidden="true">
+        <header class="live-header">
+          <div class="brand live-brand">
+            <span class="brand-mark"></span>
+            <span>NOIR</span>
+          </div>
+          <div class="live-status">
+            <span class="live-pulse"></span>
+            <span>LIVE</span>
+            <span class="source-name" id="sourceName">SYSTEMAUDIO</span>
+          </div>
+        </header>
+
+        <div class="track-info">
+          <span class="track-label">NOW VISUALISING</span>
+          <strong id="trackName">SYSTEM AUDIO</strong>
+          <span class="mode-name" id="modeName">AURA / ICE WHITE</span>
+        </div>
+
+        <div class="live-controls">
+          <button class="icon-button" id="backButton" type="button" aria-label="Zurück zum Setup">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M19 12H5M10 17l-5-5 5-5"></path>
+            </svg>
+          </button>
+          <button class="pause-button" id="pauseButton" type="button">
+            <span class="pause-icon"></span>
+            <span id="pauseText">PAUSE</span>
+          </button>
+          <button class="icon-button" id="fullscreenButton" type="button" aria-label="Vollbild">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"></path>
+            </svg>
+          </button>
+          <button class="icon-button" id="shuffleButton" type="button" aria-label="Nächste Szene">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M16 3h5v5M4 20l6-6M21 3l-7 7M16 16l5 5M21 16v5h-5M4 4l5 5"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="level-meter" aria-hidden="true">
+          <span>BASS</span>
+          <div class="meter-track"><i id="bassMeter"></i></div>
+          <span id="bassValue">00</span>
+        </div>
+      </section>
+    </main>
+
+    <audio id="audioPlayer" crossorigin="anonymous"></audio>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
